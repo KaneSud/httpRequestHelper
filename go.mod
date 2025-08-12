@@ -1,4 +1,4 @@
-module httpRequestHelper
+module github.com/KaneSud/httpRequestHelper
 
 
 go 1.19
