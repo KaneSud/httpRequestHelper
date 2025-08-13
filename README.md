@@ -23,11 +23,11 @@ It supports types:`
 5) uint64
 6) slices of all types above
 
-Function look at tag autoQuery and if it's "fill", then the field will be filled.
-You can explicitly set to "skip", but fot now it doesn't make sense.
+Function look at tag json and if it's "fill", then the field will be filled.
 For example:
 ```go
 type TestFullStruct struct {
-    Int     int64      `json:"int" autoQuery:"fill"`
+    Int     int64      `json:"int"`
 }
+
 ```
