@@ -72,6 +72,34 @@ func parseBool(r *http.Request, fieldVal reflect.Value, jsonTag string) error {
 	return nil
 }
 
+func parseBoolPointer(r *http.Request, fieldVal reflect.Value, jsonTag string) error {
+	itemStr := r.FormValue(jsonTag)
+	if len(itemStr) == 0 {
+		return nil
+	}
+	curItem, err := strconv.ParseBool(itemStr)
+	if err != nil {
+		return err
+	}
+	newValue := reflect.ValueOf(&curItem)
+	fieldVal.Set(newValue)
+	return nil
+}
+
+func parseInt64Pointer(r *http.Request, fieldVal reflect.Value, jsonTag string) error {
+	itemStr := r.FormValue(jsonTag)
+	if len(itemStr) == 0 {
+		return nil
+	}
+	curItem, err := strconv.ParseInt(itemStr, 10, 64)
+	if err != nil {
+		return err
+	}
+	newValue := reflect.ValueOf(&curItem)
+	fieldVal.Set(newValue)
+	return nil
+}
+
 func parseComplex128(r *http.Request, fieldVal reflect.Value, jsonTag string) error {
 	itemStr := r.FormValue(jsonTag)
 	if len(itemStr) == 0 {
@@ -248,6 +276,8 @@ var parserMap map[reflect.Type]func(*http.Request, reflect.Value, string) error
 
 func init() {
 	parserMap = map[reflect.Type]func(*http.Request, reflect.Value, string) error{
+		reflect.TypeOf((*int64)(nil)):       parseInt64Pointer,
+		reflect.TypeOf((*bool)(nil)):        parseBoolPointer,
 		reflect.TypeOf((int64)(0)):          parseInt64,
 		reflect.TypeOf((uint64)(0)):         parseUint64,
 		reflect.TypeOf((uint32)(0)):         parseUint32,

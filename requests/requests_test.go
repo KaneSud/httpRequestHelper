@@ -1,6 +1,7 @@
 package requests
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"reflect"
@@ -26,6 +27,10 @@ type TestFullStruct struct {
 	FieldNil          []string `json:"nameNil" `
 	FieldEmptyTag     []string `json:"namesEmpty" `
 	FieldFullEmptyTag []string
+}
+
+type TestPointers struct {
+	Bool *bool `json:"bool"`
 }
 
 type TestBench struct {
@@ -112,4 +117,13 @@ func TestParseQueryStructNil(t *testing.T) {
 	assert.Error(t, err)
 	err = ParseQueryStruct(interface{}(nil), request)
 	assert.Error(t, err)
+}
+
+func TestParseQueryStructPointers(t *testing.T) {
+	var outputSlice TestPointers
+	request, err := http.NewRequest("GET", "http://localhost:3333/?strings=test1&bool=true", nil)
+	assert.NoError(t, err, "Error during request creation")
+	err = ParseQueryStruct(&outputSlice, request)
+	fmt.Println(outputSlice)
+	assert.NoError(t, err)
 }
